@@ -19,6 +19,14 @@ jobs:
     # Run on the latest Ubuntu runner
     runs-on: ubuntu-latest
 
+    # Environment variables required for the application
+    # These must be set as GitHub repository secrets for the workflow to succeed
+    env:
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+      CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
     steps:
       # Step 1: Checkout the repository code
       - name: Checkout code
@@ -41,23 +49,8 @@ jobs:
       # Step 4: Run ESLint to check code quality and style
       - name: Run linter
         run: npm run lint
-        env:
-          # Environment variables required for the application
-          # Note: These are placeholders for the Next.js app configuration
-          # In production, set these as GitHub Secrets and reference them here
-          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
       # Step 5: Build the Next.js application
       # This verifies that the code compiles successfully
       - name: Build application
         run: npm run build
-        env:
-          # Environment variables required for the build process
-          # These must be set as GitHub repository secrets for the workflow to succeed
-          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}

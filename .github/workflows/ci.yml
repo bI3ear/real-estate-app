@@ -19,6 +19,11 @@ jobs:
     # Run on the latest Ubuntu runner
     runs-on: ubuntu-latest
 
+    # Limit permissions of GITHUB_TOKEN for security
+    # Only grant the minimum permissions needed for this workflow
+    permissions:
+      contents: read
+
     # Environment variables required for the application
     # These must be set as GitHub repository secrets for the workflow to succeed
     env:

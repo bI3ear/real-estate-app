@@ -1,0 +1,61 @@
+# CI Pipeline workflow for Real Estate App
+# This workflow runs automated checks on every push to main and pull request
+
+name: CI Pipeline
+
+# Trigger the workflow on push to main branch and pull requests targeting main
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# Define jobs to run in this workflow
+jobs:
+  # Main build and test job
+  build:
+    # Run on the latest Ubuntu runner
+    runs-on: ubuntu-latest
+
+    # Limit permissions of GITHUB_TOKEN for security
+    # Only grant the minimum permissions needed for this workflow
+    permissions:
+      contents: read
+
+    # Environment variables required for the application
+    # These must be set as GitHub repository secrets for the workflow to succeed
+    env:
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+      CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+    steps:
+      # Step 1: Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          # Cache npm dependencies to speed up subsequent runs
+          cache: 'npm'
+
+      # Step 3: Install project dependencies
+      # Using npm ci for clean, reproducible installs in CI environments
+      # --legacy-peer-deps flag is required due to peer dependency conflicts
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      # Step 4: Run ESLint to check code quality and style
+      - name: Run linter
+        run: npm run lint
+
+      # Step 5: Build the Next.js application
+      # This verifies that the code compiles successfully
+      - name: Build application
+        run: npm run build

@@ -1,5 +1,5 @@
 "use client"
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/ui/button'
 import { SignOutButton, UserButton, useUser } from '@clerk/nextjs'
 import { Plus } from 'lucide-react'
 import Image from 'next/image'
